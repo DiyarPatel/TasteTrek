@@ -1,7 +1,7 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+
 const Home = () => {
   const [featuredCategories, setFeaturedCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -86,7 +86,30 @@ const Home = () => {
         </div>
 
         {/* Featured dishes */}
-        <section>{/* Add your featured dishes here */}</section>
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {featuredCategories.map((category) => (
+            <div
+              key={category.idCategory}
+              className="bg-white text-black rounded-lg shadow-md overflow-hidden"
+            >
+              {/* <Image
+                src={category.strCategoryThumb}
+                alt={category.strCategory}
+                width={400}
+                height={300}
+                objectFit="cover"
+              /> */}
+              <div className="p-4">
+                <h3 className="text-xl font-semibold">
+                  {category.strCategory}
+                </h3>
+                <p className="text-gray-600">
+                  {category.strCategoryDescription}
+                </p>
+              </div>
+            </div>
+          ))}
+        </section>
       </main>
 
       {/* Footer */}
