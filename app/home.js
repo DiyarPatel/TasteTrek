@@ -1,7 +1,30 @@
-import React from 'react';
+"use client";
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import Home from './home';
-const Page = () => {
+
+const Home = () => {
+  const [featuredDishes, setFeaturedDishes] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFeaturedDishes = async () => {
+      try {
+        const response = await fetch('http://www.themealdb.com/api/json/v1/1/categories.php');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setFeaturedDishes(data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching featured dishes:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchFeaturedDishes();
+  }, []);
+
   return (
     <div className="bg-gray-100 min-h-screen">
       {/* Header */}
@@ -20,7 +43,7 @@ const Page = () => {
         <nav>
           {/* Menu items */}
           <ul className="flex space-x-4">
-            <li><a href="Home" className="text-gray-600 hover:text-gray-900" >Home </a></li>
+            <li><a href="#" className="text-gray-600 hover:text-gray-900">Home</a></li>
             <li><a href="#" className="text-gray-600 hover:text-gray-900">About</a></li>
             <li><a href="#" className="text-gray-600 hover:text-gray-900">Account</a></li>
             <li><a href="#" className="text-gray-600 hover:text-gray-900">Sign In</a></li>
@@ -43,7 +66,19 @@ const Page = () => {
 
         {/* Featured dishes */}
         <section>
-          {/* Add your featured dishes here */}
+          <h2 className="text-2xl font-bold mb-4">Featured Dishes</h2>
+          {loading ? (
+            <p>Loading...</p>
+          ) : (
+            <div className="grid grid-cols-3 gap-4">
+              {featuredDishes.map(dish => (
+                <div key={dish.id} className="border border-gray-300 rounded-md p-4">
+                  <h3 className="text-xl font-semibold">{dish.name}</h3>
+                  <p className="text-gray-600">{dish.description}</p>
+                </div>
+              ))}
+            </div>
+          )}
         </section>
       </main>
 
@@ -64,4 +99,4 @@ const Page = () => {
   );
 }
 
-export default Page;
+export default Home;
