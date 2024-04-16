@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 const Home = () => {
   const [featuredCategories, setFeaturedCategories] = useState([]);
@@ -40,12 +41,8 @@ const Home = () => {
         <nav>
           {/* Menu items */}
           <ul className="flex space-x-4">
-            <li>
-              <a href="#" className="text-gray-600 hover:text-gray-900">
-                Home
-              </a>
-            </li>
-            <li>
+            <Link href="home">Home</Link>
+            {/* <li>
               <a href="#" className="text-gray-600 hover:text-gray-900">
                 About
               </a>
@@ -59,7 +56,7 @@ const Home = () => {
               <a href="#" className="text-gray-600 hover:text-gray-900">
                 Sign In
               </a>
-            </li>
+            </li> */}
           </ul>
         </nav>
       </header>
@@ -106,11 +103,12 @@ const Home = () => {
                   {category.strCategory}
                 </h3>
                 <p className="text-gray-600">
-                  {category.strCategoryDescription}
+                  {/* {category.strCategoryDescription} */}
                 </p>
               </div>
             </div>
           ))}
+          
         </section>
       </main>
 
