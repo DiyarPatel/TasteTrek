@@ -3,28 +3,28 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 
 const Home = () => {
-  const [featuredDishes, setFeaturedDishes] = useState([]);
+  const [featuredCategories, setFeaturedCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchFeaturedDishes = async () => {
+    const fetchFeaturedCategories = async () => {
       try {
         const response = await fetch(
-          "http://www.themealdb.com/api/json/v1/1/categories.php"
+          "https://www.themealdb.com/api/json/v1/1/categories.php"
         );
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        setFeaturedDishes(data);
+        setFeaturedCategories(data.categories);
         setLoading(false);
       } catch (error) {
-        console.error("Error fetching featured dishes:", error);
+        console.error("Error fetching featured categories:", error);
         setLoading(false);
       }
     };
 
-    fetchFeaturedDishes();
+    fetchFeaturedCategories();
   }, []);
 
   return (
@@ -68,7 +68,7 @@ const Home = () => {
       <main className="container mx-auto px-4 py-8">
         {/* Title */}
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold">
+          <h2 className="text-3xl font-bold color: to-black">
             Discover Delicious Food Adventures
           </h2>
           <p className="text-gray-600">
@@ -77,7 +77,7 @@ const Home = () => {
         </div>
 
         {/* Search bar */}
-        <div className="mb-8">
+        <div className="mb-9">
           <input
             type="text"
             placeholder="Search..."
@@ -86,23 +86,31 @@ const Home = () => {
         </div>
 
         {/* Featured dishes */}
-        <section>
-          <h2 className="text-2xl font-bold mb-4">Featured Dishes</h2>
-          {loading ? (
-            <p>Loading...</p>
-          ) : (
-            <div className="grid grid-cols-3 gap-4">
-              {featuredDishes.map((dish) => (
-                <div
-                  key={dish.id}
-                  className="border border-gray-300 rounded-md p-4"
-                >
-                  <h3 className="text-xl font-semibold">{dish.name}</h3>
-                  <p className="text-gray-600">{dish.description}</p>
-                </div>
-              ))}
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {featuredCategories.map((category) => (
+            <div
+              key={category.idCategory}
+              className="bg-white text-black rounded-lg shadow-md overflow-hidden relative"
+            >
+              <div className="relative h-48">
+                <Image
+                  src={category.strCategoryThumb}
+                  alt={category.strCategory}
+                  layout="fill"
+                  objectFit="cover"
+                  loader={({ src }) => src}
+                />
+              </div>
+              <div className="p-4">
+                <h3 className="text-xl font-semibold">
+                  {category.strCategory}
+                </h3>
+                <p className="text-gray-600">
+                  {category.strCategoryDescription}
+                </p>
+              </div>
             </div>
-          )}
+          ))}
         </section>
       </main>
 
