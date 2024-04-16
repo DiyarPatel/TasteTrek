@@ -1,5 +1,7 @@
-import React from 'react';
-import Image from 'next/image';
+"use client";
+import React from "react";
+import Image from "next/image";
+import { useState, useEffect } from "react";
 const Home = () => {
   const [featuredCategories, setFeaturedCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -7,15 +9,17 @@ const Home = () => {
   useEffect(() => {
     const fetchFeaturedCategories = async () => {
       try {
-        const response = await fetch('http://www.themealdb.com/api/json/v1/1/categories.php');
+        const response = await fetch(
+          "https://www.themealdb.com/api/json/v1/1/categories.php"
+        );
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
         const data = await response.json();
         setFeaturedCategories(data.categories);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching featured categories:', error);
+        console.error("Error fetching featured categories:", error);
         setLoading(false);
       }
     };
@@ -74,13 +78,15 @@ const Home = () => {
 
         {/* Search bar */}
         <div className="mb-9">
-          <input type="text" placeholder="Search..." className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:border-blue-400" />
+          <input
+            type="text"
+            placeholder="Search..."
+            className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:border-blue-400"
+          />
         </div>
 
         {/* Featured dishes */}
-        <section>
-          {/* Add your featured dishes here */}
-        </section>
+        <section>{/* Add your featured dishes here */}</section>
       </main>
 
       {/* Footer */}
