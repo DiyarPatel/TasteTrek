@@ -1,32 +1,36 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
 
 const Home = () => {
-  const [featuredCategories, setFeaturedCategories] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("Arrabiata");
+  const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchFeaturedCategories = async () => {
+    const fetchRecipes = async () => {
       try {
         const response = await fetch(
-          "https://www.themealdb.com/api/json/v1/1/categories.php"
+          `https://www.themealdb.com/api/json/v1/1/search.php?s=${searchQuery}`
         );
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        setFeaturedCategories(data.categories);
+        setRecipes(data.meals);
         setLoading(false);
       } catch (error) {
-        console.error("Error fetching featured categories:", error);
+        console.error("Error fetching recipes:", error);
         setLoading(false);
       }
     };
 
-    fetchFeaturedCategories();
-  }, []);
+    fetchRecipes();
+  }, [searchQuery]);
+
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+  };
 
   return (
     <div className="bg-gray-100 min-h-screen">
@@ -41,8 +45,12 @@ const Home = () => {
         <nav>
           {/* Menu items */}
           <ul className="flex space-x-4">
-            <Link href="home">Home</Link>
-            {/* <li>
+            <li>
+              <a href="#" className="text-gray-600 hover:text-gray-900">
+                Home
+              </a>
+            </li>
+            <li>
               <a href="#" className="text-gray-600 hover:text-gray-900">
                 About
               </a>
@@ -56,7 +64,7 @@ const Home = () => {
               <a href="#" className="text-gray-600 hover:text-gray-900">
                 Sign In
               </a>
-            </li> */}
+            </li>
           </ul>
         </nav>
       </header>
@@ -77,38 +85,41 @@ const Home = () => {
         <div className="mb-9">
           <input
             type="text"
-            placeholder="Search..."
-            className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:border-blue-400"
+            placeholder="Search recipes..."
+            value={searchQuery}
+            onChange={handleSearch}
+            className="w-full border border-gray-300 px-4 py-2 text-black rounded-md focus:outline-none focus:border-blue-400"
           />
         </div>
 
-        {/* Featured dishes */}
+        {/* Featured recipes */}
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {featuredCategories.map((category) => (
-            <div
-              key={category.idCategory}
-              className="bg-white text-black rounded-lg shadow-md overflow-hidden relative"
-            >
-              <div className="relative h-48">
-                <Image
-                  src={category.strCategoryThumb}
-                  alt={category.strCategory}
-                  layout="fill"
-                  objectFit="cover"
-                  loader={({ src }) => src}
-                />
+          {loading ? (
+            <p>Loading...</p>
+          ) : recipes ? (
+            recipes.map((recipe) => (
+              <div
+                key={recipe.idMeal}
+                className="bg-white text-black rounded-lg shadow-md overflow-hidden relative"
+              >
+                <div className="relative h-48">
+                  <Image
+                    src={recipe.strMealThumb}
+                    alt={recipe.strMeal}
+                    layout="fill"
+                    objectFit="cover"
+                    loader={({ src }) => src}
+                  />
+                </div>
+                <div className="p-4">
+                  <h3 className="text-xl font-semibold">{recipe.strMeal}</h3>
+                  <p className="text-gray-600">{recipe.strArea}</p>
+                </div>
               </div>
-              <div className="p-4">
-                <h3 className="text-xl font-semibold">
-                  {category.strCategory}
-                </h3>
-                <p className="text-gray-600">
-                  {/* {category.strCategoryDescription} */}
-                </p>
-              </div>
-            </div>
-          ))}
-          
+            ))
+          ) : (
+            <p>No recipes found.</p>
+          )}
         </section>
       </main>
 
