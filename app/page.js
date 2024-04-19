@@ -1,6 +1,8 @@
-import React from 'react';
-import Image from 'next/image';
-const Home = () => {
+import Home from "./components/home";
+import AboutPage from "./components/About";
+import Link from "next/link";
+
+const Page = () => {
   return (
     <div className="bg-gray-100 min-h-screen">
       {/* Header */}
